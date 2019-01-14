@@ -1,0 +1,201 @@
+fileFormatVersion: 2
+guid: 08054e135dcfb384da4ff6efa6140475
+ModelImporter:
+  serializedVersion: 23
+  fileIDToRecycleName:
+    100000: accelerato
+    100002: black_plas
+    100004: body_orang
+    100006: body_red
+    100008: break_peda
+    100010: Camera
+    100012: CINEMA_4D_Editor
+    100014: controller_1
+    100016: digital_di
+    100018: //RootNode
+    100020: fork_left
+    100022: fork_rack_
+    100024: fork_right
+    100026: front_ligh
+    100028: handbreak
+    100030: hydrolic_b
+    100032: Lamp
+    100034: main_
+    100036: main_body_
+    100038: Null
+    100040: rear_light
+    100042: rear_wheel
+    100044: rubber_tyr
+    100046: steering_w
+    100048: wheel_rims
+    400000: accelerato
+    400002: black_plas
+    400004: body_orang
+    400006: body_red
+    400008: break_peda
+    400010: Camera
+    400012: CINEMA_4D_Editor
+    400014: controller_1
+    400016: digital_di
+    400018: //RootNode
+    400020: fork_left
+    400022: fork_rack_
+    400024: fork_right
+    400026: front_ligh
+    400028: handbreak
+    400030: hydrolic_b
+    400032: Lamp
+    400034: main_
+    400036: main_body_
+    400038: Null
+    400040: rear_light
+    400042: rear_wheel
+    400044: rubber_tyr
+    400046: steering_w
+    400048: wheel_rims
+    2000000: Camera
+    2000002: CINEMA_4D_Editor
+    2100000: No Name
+    2300000: accelerato
+    2300002: black_plas
+    2300004: body_orang
+    2300006: body_red
+    2300008: break_peda
+    2300010: controller_1
+    2300012: digital_di
+    2300014: fork_left
+    2300016: fork_rack_
+    2300018: fork_right
+    2300020: front_ligh
+    2300022: handbreak
+    2300024: hydrolic_b
+    2300026: main_
+    2300028: main_body_
+    2300030: rear_light
+    2300032: rear_wheel
+    2300034: rubber_tyr
+    2300036: steering_w
+    2300038: wheel_rims
+    3300000: accelerato
+    3300002: black_plas
+    3300004: body_orang
+    3300006: body_red
+    3300008: break_peda
+    3300010: controller_1
+    3300012: digital_di
+    3300014: fork_left
+    3300016: fork_rack_
+    3300018: fork_right
+    3300020: front_ligh
+    3300022: handbreak
+    3300024: hydrolic_b
+    3300026: main_
+    3300028: main_body_
+    3300030: rear_light
+    3300032: rear_wheel
+    3300034: rubber_tyr
+    3300036: steering_w
+    3300038: wheel_rims
+    4300000: main_body_
+    4300002: controller_1
+    4300004: main_
+    4300006: body_orang
+    4300008: rear_wheel
+    4300010: front_ligh
+    4300012: rear_light
+    4300014: body_red
+    4300016: rubber_tyr
+    4300018: wheel_rims
+    4300020: fork_right
+    4300022: fork_left
+    4300024: steering_w
+    4300026: accelerato
+    4300028: break_peda
+    4300030: hydrolic_b
+    4300032: fork_rack_
+    4300034: handbreak
+    4300036: digital_di
+    4300038: black_plas
+    10800000: Lamp
+  externalObjects: {}
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+    previousCalculatedGlobalScale: 1
+    hasPreviousCalculatedGlobalScale: 0
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
