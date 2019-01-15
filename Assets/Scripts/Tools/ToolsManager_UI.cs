@@ -2,15 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Valve.VR;
+using Valve.VR.InteractionSystem;
 
 [RequireComponent(typeof(ToolsManager))]
 public class ToolsManager_UI : MonoBehaviour {
 
 	public Canvas UICanvas;
+	public GameObject TouchpadDirection;
 	public GameObject ToolPanelPrefab;
 	[Range(0,100)]public float SpaceRatio;
 	private ToolsManager toolsManager;
 	private Color color_selected;
+	private bool isActive = false;
 
 	void Awake () {
 		toolsManager = GetComponent<ToolsManager>();
@@ -34,10 +38,33 @@ public class ToolsManager_UI : MonoBehaviour {
 			{
 				if(img.gameObject != newPanel)
 				{
+					img.transform.localRotation = Quaternion.Euler(0, 0, (rawItemAngle*i));
 					img.sprite = toolsManager.ToolsList[i].ToolIcon;
 				}
 			}
 		}
+	}
+
+	private void Update()
+	{
+		if(SteamVR_Input.Swift.inActions.Touchpad.GetStateDown(toolsManager.inputSource))
+		{
+			isActive = true;
+		}
+		if(SteamVR_Input.Swift.inActions.Touchpad.GetStateUp(toolsManager.inputSource))
+		{
+			isActive = false;
+		}
+		if(isActive)
+		{
+			Vector2 touchpadPos = SteamVR_Input.Swift.inActions.TouchPos.GetAxis(toolsManager.inputSource);
+			float touchpadAngle = ((Mathf.Atan2(touchpadPos.x, touchpadPos.y) / Mathf.PI) * 180f);
+			if(touchpadAngle < 0) touchpadAngle += 360f;
+			// Haptics pour chaque outil
+			Debug.Log(touchpadAngle);
+			TouchpadDirection.transform.rotation = Quaternion.Euler(0, 0, -touchpadAngle);
+		}
+		UICanvas.enabled = isActive;
 	}
 
 }

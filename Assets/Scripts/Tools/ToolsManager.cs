@@ -12,6 +12,7 @@ public class ToolsManager : MonoBehaviour {
 	public List<Tool> ToolsList = new List<Tool>();
 	private int id_currentTool = 0;
 	private GameObject currentTool;
+	private bool UImode;
 
 	public int GetToolId()
 	{
@@ -41,7 +42,7 @@ public class ToolsManager : MonoBehaviour {
 		{
 			currentTool.SendMessage("OnMenu");
 		}
-		if(SteamVR_Input.Swift.inActions.Touchpress.GetStateDown(inputSource))
+		if(SteamVR_Input.Swift.inActions.Touchpress.GetStateDown(inputSource) && !UImode)
 		{
 			SetCurrentTool(GetNextToolId());
 		}
@@ -51,6 +52,10 @@ public class ToolsManager : MonoBehaviour {
 	{
 		inputSource = GetComponent<SteamVR_Behaviour_Pose>().inputSource;
 		SetCurrentTool(id_currentTool);
+		if(GetComponent<ToolsManager_UI>() != null)
+		{
+			UImode = true;
+		}
 	}
 
 	private void SetCurrentTool(int id)
