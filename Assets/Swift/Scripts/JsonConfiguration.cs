@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using System.IO;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class JsonConfiguration : MonoBehaviour {
 
@@ -13,19 +15,23 @@ public class JsonConfiguration : MonoBehaviour {
 	string json;
 	private Machine loadObject;
 
+	public GameObject LoadButton;
+	public GameObject loadPanel;
+
 
 	// Use this for initialization
 	void Start () {
 		machines = GameObject.FindGameObjectsWithTag("Machine");
-		dataPath = Application.dataPath + "/StreamingAssets/" + GetFileName();
+		dataPath = Application.dataPath + "/StreamingAssets/" + GetDate() + ".json";
+		LoadConfig();
 		
 	}
 
 
 	public void SaveData()
 	{
-		
-		MyList myList = new MyList();
+
+		ListOfMachine myList = new ListOfMachine();
 		myList.machinelist = new List<Machine>();
 		
 		foreach (var machine in machines)
@@ -45,12 +51,42 @@ public class JsonConfiguration : MonoBehaviour {
 
 	}
 
-	public void LoadData()
+	public void LoadData(string myButton)
 	{
+		Debug.Log(myButton);
+
+		ListOfMachine myListofMachine = new ListOfMachine();
+		myListofMachine.machinelist = new List<Machine>();
+		string dataAsJson = File.ReadAllText(myButton);
+		myListofMachine = JsonUtility.FromJson<ListOfMachine>(dataAsJson);
+		
+		foreach(var element in myListofMachine.machinelist)
+		{
+			GameObject myTarget = GameObject.Find(element.Name);
+			myTarget.transform.position = element.Position;
+			myTarget.transform.rotation = element.Rotation;
+		}
 
 	}
 
-	public string GetFileName()
+	public void LoadConfig()
+	{
+
+		string[] filePaths = Directory.GetFiles(Application.dataPath + "/StreamingAssets/", "*.json");
+		foreach (string filePath in filePaths)
+		{
+			GameObject newButton = Instantiate(LoadButton) as GameObject;
+			newButton.transform.SetParent(loadPanel.transform, false);
+			newButton.name = filePath;
+			newButton.GetComponentInChildren<Text>().text = filePath;
+			var button = newButton.GetComponent<UnityEngine.UI.Button>();
+			button.onClick.AddListener(() => LoadData(newButton.name));
+
+		}
+	}
+
+
+	public string GetDate()
 	{
 		DateTime localDate = DateTime.Now;
 		string format = "yyyy MM dd – HH mm ss";
@@ -64,7 +100,7 @@ public class JsonConfiguration : MonoBehaviour {
 }
 
 [Serializable]
-public class MyList
+public class ListOfMachine
 {
 	public List<Machine> machinelist;
 }
