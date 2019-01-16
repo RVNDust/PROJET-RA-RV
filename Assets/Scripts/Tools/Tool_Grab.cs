@@ -8,6 +8,7 @@ public class Tool_Grab : ToolObject {
 
 	public SphereCollider HoverSphere;
     public float AuthorityRemovalTimer = 0.1f;
+    
     private GameObject GrabbedObject;
 
 	void Awake()

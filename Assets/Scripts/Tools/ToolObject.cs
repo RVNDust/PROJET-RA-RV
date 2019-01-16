@@ -1,9 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
 
 public abstract class ToolObject : MonoBehaviour {
+
+    public string toolName = "None";
+    public Sprite toolIcon;
+
 	public abstract void OnInteractDown();
 	public abstract void OnInteractUp();
 	public abstract void OnMenu();

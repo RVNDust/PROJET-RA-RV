@@ -9,24 +9,11 @@ using Valve.VR.InteractionSystem;
 public class ToolsManager : MonoBehaviour {
 
     public SteamVR_Input_Sources inputSource;
-	public List<Tool> ToolsList = new List<Tool>();
+	public List<GameObject> ToolsList = new List<GameObject>();
+
 	private int id_currentTool = 0;
 	private GameObject currentTool;
 	private bool UImode;
-
-	public int GetToolId()
-	{
-		return id_currentTool;
-	}
-
-	public int GetNextToolId()
-	{
-		if(id_currentTool+1 > ToolsList.Count-1)
-		{
-			return 0;
-		}
-		return id_currentTool+1;
-	}
 
 	private void Update()
 	{
@@ -58,24 +45,55 @@ public class ToolsManager : MonoBehaviour {
 		}
 	}
 
-	private void SetCurrentTool(int id)
+	public string GetToolName(int id)
+	{
+		return ToolsList[id].GetComponent<ToolObject>().toolName;
+	}
+
+	public Sprite GetToolIcon(int id)
+	{
+		return ToolsList[id].GetComponent<ToolObject>().toolIcon;
+	}
+
+	// Any methods that relate to the currently equipped tool
+
+	public void SetCurrentTool(int id)
 	{
 		if(currentTool != null)
 		{
 			Destroy(currentTool); // Verify if the player is holding an object, if they are, drop it -> OnDestroy()
 		}
 		id_currentTool = id;
-		currentTool = Instantiate(ToolsList[id].ToolPrefab);
+		currentTool = Instantiate(ToolsList[id]);
 		currentTool.transform.parent = gameObject.transform;
 		currentTool.transform.localPosition = Vector3.zero;
 		currentTool.transform.localRotation = Quaternion.identity;
 	}
 
-}
+	public string GetCurrentToolName()
+	{
+		return ToolsList[id_currentTool].GetComponent<ToolObject>().toolName;
+	}
 
- [Serializable]
-public struct Tool
-{
-	public GameObject ToolPrefab;
-	public Sprite ToolIcon;
+	public Sprite GetCurrentToolIcon()
+	{
+		return ToolsList[id_currentTool].GetComponent<ToolObject>().toolIcon;
+	}
+
+	public int GetCurrentToolId()
+	{
+		return id_currentTool;
+	}
+
+	// a ranger 
+
+	public int GetNextToolId()
+	{
+		if(id_currentTool+1 > ToolsList.Count-1)
+		{
+			return 0;
+		}
+		return id_currentTool+1;
+	}
+
 }

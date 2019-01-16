@@ -10,6 +10,7 @@ public class VR_CameraRigMultiuser : NetworkBehaviour {
     // Reference to SteamController
     public GameObject SteamVRLeft, SteamVRRight, SteamVRCamera;
     public GameObject UserOtherLeftHandModel, UserOtherRightHandModel;
+    public GameObject ToolCanvasLeft, ToolCanvasRight;
     private GameObject goFreeLookCameraRig;
 
     void Start()
@@ -56,6 +57,9 @@ public class VR_CameraRigMultiuser : NetworkBehaviour {
 
             Destroy(SteamVRRight.GetComponent<ControllerInput>());
             Destroy(SteamVRLeft.GetComponent<ControllerInput>());
+
+            Destroy(ToolCanvasLeft);
+            Destroy(ToolCanvasRight);
 
             // Camera activation if userme, deactivate if userother
             Destroy(GetComponentInChildren<Camera>());

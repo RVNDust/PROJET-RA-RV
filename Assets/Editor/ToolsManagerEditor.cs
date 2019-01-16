@@ -12,6 +12,7 @@ public class ToolsManagerEditor : Editor {
 	private ReorderableList toolsList;
 	private Color color_selected;
 	private Color color_index;
+
 	void OnEnable()
 	{
 		settings = (ToolsManager)target;
@@ -27,11 +28,8 @@ public class ToolsManagerEditor : Editor {
 			rect.y += 2;
 
 			EditorGUI.PropertyField(
-				new Rect(rect.x, rect.y, rect.width - 64, EditorGUIUtility.singleLineHeight),
-				element.FindPropertyRelative("ToolPrefab"), GUIContent.none);
-			EditorGUI.PropertyField(
-				new Rect(rect.x + rect.width - 64, rect.y, 64, EditorGUIUtility.singleLineHeight),
-				element.FindPropertyRelative("ToolIcon"), GUIContent.none);
+				new Rect(rect.x, rect.y, rect.width, EditorGUIUtility.singleLineHeight),
+				element, GUIContent.none);
 		};
 
 		toolsList.drawElementBackgroundCallback = (Rect rect, int index, bool isActive, bool isFocused) => 
@@ -39,7 +37,7 @@ public class ToolsManagerEditor : Editor {
 			if(isActive && isFocused) {
 				EditorGUI.DrawRect(rect, color_selected);
 			} 
-			else if(index == settings.GetToolId()) 
+			else if(index == settings.GetCurrentToolId()) 
 			{
 				EditorGUI.DrawRect(rect, color_index);
 			}
