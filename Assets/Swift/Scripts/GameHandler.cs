@@ -16,4 +16,5 @@ public class GameHandler : MonoBehaviour {
 			ScreenshotHandler.TakeScreenshot_Static(Screen.width, Screen.height);
 		}
 	}
+
 }
