@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Valve.VR;
 using Valve.VR.InteractionSystem;
+using UnityEngine.Networking;
 
 public class Tool_Grab : ToolObject {
 
@@ -27,19 +28,14 @@ public class Tool_Grab : ToolObject {
         }
 	}
 
-	public override void OnInteractDown()
+	protected override void OnInteractDown()
 	{
 		GrabObject();
 	}
 
-	public override void OnInteractUp()
+	protected override void OnInteractUp()
 	{
-		ReleaseObject();
-	}
-	
-	public override void OnMenu()
-	{
-
+		ReleaseObject(false);
 	}
 
 	/// <summary>
@@ -47,7 +43,7 @@ public class Tool_Grab : ToolObject {
     /// </summary>
     private void GrabObject()
     {
-        LayerMask DefaultLayer = 1 << LayerMask.NameToLayer("Default");
+        LayerMask DefaultLayer = 1 << LayerMask.NameToLayer("Default") | 1 << LayerMask.NameToLayer("Machines");
         Collider[] CollisionResult = Physics.OverlapSphere(HoverSphere.transform.position, HoverSphere.radius, DefaultLayer);
         if(CollisionResult.Length > 0)
         {
@@ -57,13 +53,16 @@ public class Tool_Grab : ToolObject {
                 GrabbedObject.GetComponent<GrabbableObject>().SendMessage("OnGrab");
                 GrabbedObject.GetComponent<VelocityEstimator>().BeginEstimatingVelocity();
                 Debug.Log("Grabbed object " + GrabbedObject.name);
-                GetLocalPlayer().GetComponent<VR_CameraRigMultiuser>().CmdAddAuth(GrabbedObject);
-                if(!gameObject.GetComponent<FixedJoint>()){
-                    FixedJoint fx = gameObject.AddComponent<FixedJoint>();
+                GetLocalPlayer().GetComponent<VR_CameraRigMultiuser>().CmdSetAuth(GrabbedObject.GetComponent<NetworkIdentity>().netId, GetLocalPlayer().GetComponent<NetworkIdentity>());
+                
+                GrabbedObject.transform.position = gameObject.transform.position;
+                // GrabbedObject.transform.localRotation = gameObject.transform.rotation; Too much discomfort for the user when holding machines
+                if(!GrabbedObject.GetComponent<FixedJoint>()){
+                    FixedJoint fx = GrabbedObject.AddComponent<FixedJoint>();
                     fx.breakForce = Mathf.Infinity;
                     fx.breakTorque = Mathf.Infinity;
-                    fx.connectedBody = GrabbedObject.GetComponent<Rigidbody>();
                 }
+                GrabbedObject.GetComponent<FixedJoint>().connectedBody = gameObject.GetComponent<Rigidbody>();
             }
         }
 	}
@@ -71,18 +70,38 @@ public class Tool_Grab : ToolObject {
     /// <summary>
     /// Releases any object held inside this hand
     /// </summary>
-    private void ReleaseObject(){
+    private void ReleaseObject(bool immediate){
         if(GrabbedObject != null) 
         {
-            if (gameObject.GetComponent<FixedJoint>()){
-                Destroy(gameObject.GetComponent<FixedJoint>());
-            }
-            GrabbedObject.GetComponent<GrabbableObject>().SendMessage("OnRelease");
-            GrabbedObject.GetComponent<Rigidbody>().velocity = GrabbedObject.GetComponent<VelocityEstimator>().GetVelocityEstimate();
-            GrabbedObject.GetComponent<Rigidbody>().angularVelocity = GrabbedObject.GetComponent<VelocityEstimator>().GetAngularVelocityEstimate();
-            GrabbedObject.GetComponent<VelocityEstimator>().FinishEstimatingVelocity();
-            StartCoroutine(RemoveAuthCoroutine());
-        }        
+            if(GrabbedObject.GetComponent<FixedJoint>())
+            {
+                if (GrabbedObject.GetComponent<FixedJoint>().connectedBody == gameObject.GetComponent<Rigidbody>())
+                {
+                    Destroy(GrabbedObject.GetComponent<FixedJoint>());
+                    GrabbedObject.GetComponent<GrabbableObject>().SendMessage("OnRelease");
+                    GrabbedObject.GetComponent<Rigidbody>().velocity = GrabbedObject.GetComponent<VelocityEstimator>().GetVelocityEstimate();
+                    GrabbedObject.GetComponent<Rigidbody>().angularVelocity = GrabbedObject.GetComponent<VelocityEstimator>().GetAngularVelocityEstimate();
+                    GrabbedObject.GetComponent<VelocityEstimator>().FinishEstimatingVelocity();
+                    if(immediate)
+                    {
+                        GetLocalPlayer().GetComponent<VR_CameraRigMultiuser>().CmdRemoveAuth(GrabbedObject);
+                        GrabbedObject = null;
+                    } else {
+                        StartCoroutine(RemoveAuthCoroutine());
+                    }
+                } else {
+                    GrabbedObject = null;
+                }
+            } 
+        }       
+    }
+
+    void OnDestroy()
+    {
+        if(GrabbedObject != null)
+        {
+            ReleaseObject(true);
+        }
     }
 
     /// <summary>

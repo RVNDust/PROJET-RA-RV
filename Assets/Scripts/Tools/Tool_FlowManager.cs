@@ -9,17 +9,17 @@ public class Tool_FlowManager : ToolObject {
 
 	}
 
-	public override void OnInteractDown()
+	protected override void OnInteractDown()
 	{
 
 	}
 
-	public override void OnInteractUp()
+	protected override void OnInteractUp()
 	{
 
 	}
 	
-	public override void OnMenu()
+	protected override void OnMenu()
 	{
 
 	}

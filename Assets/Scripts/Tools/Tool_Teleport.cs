@@ -6,26 +6,16 @@ using Valve.VR.InteractionSystem;
 
 public class Tool_Teleport : ToolObject {
 
-
-	void Awake()
-	{
-
-	}
-
-	public override void OnInteractDown()
+	protected override void OnGripDown()
 	{
         TeleportPressed();
 	}
 
-	public override void OnInteractUp()
+	protected override void OnGripUp()
 	{
         TeleportReleased();
 	}
 	
-	public override void OnMenu()
-	{
-
-	}
 
     /// <summary>
     /// Adds a pointer at the tip of the controller for teleporation

@@ -1,11 +1,9 @@
 fileFormatVersion: 2
-guid: 1f3ca4dd1f3b2c646b35b27532ca0bf7
+guid: 7253ca5626f2a474bb4c1142a489d983
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences:
-  - boundingBoxPrefab: {fileID: 1291929918654006, guid: d272e22e246fa1e4db6fc65035fe5679,
-      type: 2}
+  defaultReferences: []
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

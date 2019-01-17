@@ -17,21 +17,101 @@ public class ToolsManager : MonoBehaviour {
 
 	private void Update()
 	{
+		#region Input SendMessage
+		if(SteamVR_Input.Swift.inActions.Interact.GetState(inputSource))
+		{
+			GetComponentsInChildren<ToolObject>().ForEach(x => x.SendMessage("OnInteract"));
+		}
 		if(SteamVR_Input.Swift.inActions.Interact.GetStateDown(inputSource))
 		{
-			currentTool.SendMessage("OnInteractDown");
+			GetComponentsInChildren<ToolObject>().ForEach(x => x.SendMessage("OnInteractDown"));
 		}
 		if(SteamVR_Input.Swift.inActions.Interact.GetStateUp(inputSource))
 		{
-			currentTool.SendMessage("OnInteractUp");
+			GetComponentsInChildren<ToolObject>().ForEach(x => x.SendMessage("OnInteractUp"));
+		}
+
+		if(SteamVR_Input.Swift.inActions.Menu.GetState(inputSource))
+		{
+			GetComponentsInChildren<ToolObject>().ForEach(x => x.SendMessage("OnMenu"));
 		}
 		if(SteamVR_Input.Swift.inActions.Menu.GetStateDown(inputSource))
 		{
-			currentTool.SendMessage("OnMenu");
+			GetComponentsInChildren<ToolObject>().ForEach(x => x.SendMessage("OnMenuDown"));
 		}
+		if(SteamVR_Input.Swift.inActions.Menu.GetStateUp(inputSource))
+		{
+			GetComponentsInChildren<ToolObject>().ForEach(x => x.SendMessage("OnMenuUp"));
+		}
+
+		if(SteamVR_Input.Swift.inActions.Grip.GetState(inputSource))
+		{
+			GetComponentsInChildren<ToolObject>().ForEach(x => x.SendMessage("OnGrip"));
+		}
+		if(SteamVR_Input.Swift.inActions.Grip.GetStateDown(inputSource))
+		{
+			GetComponentsInChildren<ToolObject>().ForEach(x => x.SendMessage("OnGripDown"));
+		}
+		if(SteamVR_Input.Swift.inActions.Grip.GetStateUp(inputSource))
+		{
+			GetComponentsInChildren<ToolObject>().ForEach(x => x.SendMessage("OnGripUp"));
+		}
+
+		if(SteamVR_Input.Swift.inActions.Touchpress.GetState(inputSource))
+		{
+			GetComponentsInChildren<ToolObject>().ForEach(x => 
+			{
+				x.SendMessage("OnTouchpress");
+				x.touchpadPos = SteamVR_Input.Swift.inActions.TouchPos.GetAxis(inputSource);
+			});
+		}
+		if(SteamVR_Input.Swift.inActions.Touchpress.GetStateDown(inputSource))
+		{
+			GetComponentsInChildren<ToolObject>().ForEach(x => 
+			{
+				x.SendMessage("OnTouchpressDown");
+				x.touchpadPos = SteamVR_Input.Swift.inActions.TouchPos.GetAxis(inputSource);
+			});
+		}
+		if(SteamVR_Input.Swift.inActions.Touchpress.GetStateUp(inputSource))
+		{
+			GetComponentsInChildren<ToolObject>().ForEach(x => 
+			{
+				x.SendMessage("OnTouchpressUp");
+				x.touchpadPos = SteamVR_Input.Swift.inActions.TouchPos.GetAxis(inputSource);
+			});
+		}
+
+		if(SteamVR_Input.Swift.inActions.Touchpad.GetState(inputSource))
+		{
+			GetComponentsInChildren<ToolObject>().ForEach(x => 
+			{
+				x.SendMessage("OnTouchpad");
+				x.touchpadPos = SteamVR_Input.Swift.inActions.TouchPos.GetAxis(inputSource);
+			});
+		}
+		if(SteamVR_Input.Swift.inActions.Touchpad.GetStateDown(inputSource))
+		{
+			GetComponentsInChildren<ToolObject>().ForEach(x => 
+			{
+				x.SendMessage("OnTouchpadDown");
+				x.touchpadPos = SteamVR_Input.Swift.inActions.TouchPos.GetAxis(inputSource);
+			});
+		}
+		if(SteamVR_Input.Swift.inActions.Touchpad.GetStateUp(inputSource))
+		{
+			GetComponentsInChildren<ToolObject>().ForEach(x => 
+			{
+				x.SendMessage("OnTouchpadUp");
+				x.touchpadPos = SteamVR_Input.Swift.inActions.TouchPos.GetAxis(inputSource);
+			});
+		}
+		#endregion
+		// Allows changing tools when we are not using any UI element
 		if(SteamVR_Input.Swift.inActions.Touchpress.GetStateDown(inputSource) && !UImode)
 		{
 			SetCurrentTool(GetNextToolId());
+			Debug.LogWarning("No UI element detected, changing tool to " + GetCurrentToolName());
 		}
 	}
 
