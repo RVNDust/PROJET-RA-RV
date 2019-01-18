@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: c894e937082467040abe797d6c6c68d8
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - toolIcon: {instanceID: 0}
+  - UI_Canvas: {instanceID: 0}
+  - Tool_UIInteractPrefab: {fileID: 1116979629064138, guid: 5c088922e81728d458c99f3318c32f11,
+      type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
