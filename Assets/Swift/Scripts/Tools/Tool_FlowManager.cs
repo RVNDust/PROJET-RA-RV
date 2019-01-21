@@ -1,22 +1,49 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class Tool_FlowManager : ToolObject_UI {
 
-	void Awake()
-	{
+    public GameObject UI_Scrollrect;
+    public GameObject FlowGroupUIPrefab;
+    public GameObject FlowPrefab;
 
-	}
+    public string[] FlowGroup_A;
+    private List<FlowUI> FlowGroupsUI = new List<FlowUI>();
+    private List<Flow> temp_Flow = new List<Flow>();
 
-	protected override void OnInteractDown()
-	{
-		NotImplementedException();
-	}
+    private void Start()
+    {
+        FlowGroup_A = new string[3];
+        FlowGroup_A[0] = "F1";
+        FlowGroup_A[1] = "F2";
+        FlowGroup_A[2] = "F3";
 
-	protected override void OnInteractUp()
-	{
-		NotImplementedException();
-	}
+        var newFlow = Instantiate(new GameObject("Flow " + "A"));
+        temp_Flow.Add(Instantiate(FlowPrefab, newFlow.transform).GetComponent<Flow>());
+        temp_Flow.Last().gameObject.name = "Start to " + FlowGroup_A[0];
+
+        for (int i=0; i < FlowGroup_A.Length-1; i++)
+        {
+            temp_Flow.Add(Instantiate(FlowPrefab, newFlow.transform).GetComponent<Flow>());
+            if (i > FlowGroup_A.Length - 1)
+            {
+                temp_Flow.Last().gameObject.name = FlowGroup_A[FlowGroup_A.Length] + " to End";
+            }
+            else
+            {
+                temp_Flow.Last().gameObject.name = FlowGroup_A[i] + " to " + FlowGroup_A[i + 1];
+            }
+        }
+        
+
+        FlowGroupsUI.Add(Instantiate(FlowGroupUIPrefab, UI_Scrollrect.transform).GetComponent<FlowUI>());
+        FlowGroupsUI.Last().Flow = temp_Flow;
+
+    }
+
+    
+
 
 }

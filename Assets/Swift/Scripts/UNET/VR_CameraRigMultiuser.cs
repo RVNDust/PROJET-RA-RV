@@ -11,6 +11,7 @@ public class VR_CameraRigMultiuser : NetworkBehaviour {
     public GameObject SteamVRLeft, SteamVRRight, SteamVRCamera;
     public GameObject UserOtherLeftHandModel, UserOtherRightHandModel;
     public GameObject ToolCanvasLeft, ToolCanvasRight;
+    public MonoBehaviour[] ScriptsToRemove;
     private GameObject goFreeLookCameraRig;
 
     void Start()
@@ -49,14 +50,13 @@ public class VR_CameraRigMultiuser : NetworkBehaviour {
         {
             // Left && right activation if userMe, Deactivate if UserOther
             // Left && Right SteamVR_Rendermodel activationn if USerme, deactivate if UserOther
-            Destroy(SteamVRLeft.GetComponent<SteamVR_Behaviour_Pose>());
+            foreach(MonoBehaviour script in ScriptsToRemove)
+            {
+                Destroy(script);
+            }
+
             Destroy(SteamVRLeft.GetComponentInChildren<SteamVR_RenderModel>());
-
-            Destroy(SteamVRRight.GetComponent<SteamVR_Behaviour_Pose>());
             Destroy(SteamVRRight.GetComponentInChildren<SteamVR_RenderModel>());
-
-            Destroy(SteamVRRight.GetComponent<ControllerInput>());
-            Destroy(SteamVRLeft.GetComponent<ControllerInput>());
 
             Destroy(ToolCanvasLeft);
             Destroy(ToolCanvasRight);

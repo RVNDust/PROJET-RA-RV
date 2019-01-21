@@ -46,8 +46,7 @@ public class Tool_Grab : ToolObject {
         LayerMask DefaultLayer = 1 << LayerMask.NameToLayer("Default") | 1 << LayerMask.NameToLayer("Machines");
         Collider[] CollisionResult = Physics.OverlapSphere(HoverSphere.transform.position, HoverSphere.radius, DefaultLayer);
         if(CollisionResult.Length > 0)
-        {
-            Debug.Log("A");            
+        {         
             GrabbedObject = CollisionResult[0].gameObject;
             if(GrabbedObject.GetComponent<GrabbableObject>())
             {

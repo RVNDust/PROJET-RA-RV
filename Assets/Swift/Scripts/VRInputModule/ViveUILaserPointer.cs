@@ -24,11 +24,17 @@ public class ViveUILaserPointer : IUILaserPointer
 
     public override void OnEnterControl(GameObject control)
     {
-        SteamVR_Input.Swift.outActions.Haptics.Execute(0, 0.1f, 50, 0.5f, inputSource);
+        if(control.GetComponent<UnityEngine.UI.Selectable>())
+        {
+            SteamVR_Input.Swift.outActions.Haptics.Execute(0, 0.1f, 50, 0.5f, inputSource);
+        } else if (control.transform.parent.GetComponent<UnityEngine.UI.Selectable>())
+        {
+            SteamVR_Input.Swift.outActions.Haptics.Execute(0, 0.1f, 50, 0.5f, inputSource);
+        }
     }
 
     public override void OnExitControl(GameObject control)
     {
-        SteamVR_Input.Swift.outActions.Haptics.Execute(0, 0.1f, 50, 0.5f, inputSource);
+
     }
 }

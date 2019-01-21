@@ -5,8 +5,9 @@ using System;
 using System.IO;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using UnityEngine.Networking;
 
-public class JsonConfiguration : MonoBehaviour {
+public class Tool_Config : ToolObject_UI {
 
 	GameObject[] machines;
 
@@ -61,15 +62,32 @@ public class JsonConfiguration : MonoBehaviour {
 		myListofMachines.machinesList = new List<Machine>();
 		string dataAsJSON = File.ReadAllText(myButton);
 		myListofMachines = JsonUtility.FromJson<ListOfMachines>(dataAsJSON);
-		
-		foreach(var element in myListofMachines.machinesList)
-		{
-			GameObject myTarget = GameObject.Find(element.Name);
-			myTarget.transform.position = element.Position;
-			myTarget.transform.rotation = element.Rotation;
-		}
 
-	}
+       //Pass the serialization to the server for optimization
+        StartCoroutine(SetMachinesPosition(myListofMachines));
+
+    }
+
+    IEnumerator SetMachinesPosition(ListOfMachines myListofMachines)
+    {
+        yield return new WaitForSeconds(0.5f);
+        foreach (var element in myListofMachines.machinesList)
+        {
+            GameObject myTarget = GameObject.Find(element.Name);
+            GetLocalPlayer().GetComponent<VR_CameraRigMultiuser>().CmdSetAuth(myTarget.GetComponent<NetworkIdentity>().netId, GetLocalPlayer().GetComponent<NetworkIdentity>());
+            myTarget.transform.position = element.Position + Vector3.up;
+            myTarget.transform.rotation = element.Rotation;
+            //GetLocalPlayer().GetComponent<VR_CameraRigMultiuser>().CmdRemoveAuth(myTarget);
+        }
+
+        yield return new WaitForSeconds(0.5f);
+
+        foreach (var element in myListofMachines.machinesList)
+        {
+            GameObject myTarget = GameObject.Find(element.Name);
+            GetLocalPlayer().GetComponent<VR_CameraRigMultiuser>().CmdRemoveAuth(myTarget);
+        }
+    }
 
 	public void SaveConfig(){
 		GameObject newSaveButton = Instantiate(SaveButton) as GameObject;
@@ -110,7 +128,7 @@ public class JsonConfiguration : MonoBehaviour {
     IEnumerator TakeScreenshot(int width, int height)
     {
         // First, find and enable the camera, then wait until the end of the current frame
-        Camera myCamera = GameObject.FindGameObjectWithTag("ScreenshotCamera").GetComponent<Camera>();
+        Camera myCamera = GameObject.FindGameObjectWithTag("TopdownCamera").GetComponent<Camera>();
         myCamera.enabled = true;
         yield return new WaitForEndOfFrame();
 
