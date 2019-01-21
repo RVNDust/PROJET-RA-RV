@@ -13,7 +13,7 @@ public class RadarMultiuser : NetworkBehaviour
     // Use this for initialization
     void Start()
     {
-        Debug.Log("Radar isLocalPlayer:" + isLocalPlayer);
+       // Debug.Log("Radar isLocalPlayer:" + isLocalPlayer);
 
 
         GetComponent<ThirdPersonUserControl>().enabled = isLocalPlayer;

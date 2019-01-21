@@ -19,7 +19,6 @@ public class ArLoadScript : MonoBehaviour
     {
         string path;
         string jsonFile;
-        path =
         //path = Application.dataPath + "/ADDOL/StreamingAssets" + "/Machines.json";
 
 
