@@ -1,0 +1,9 @@
+{
+  "FlowPath" : [
+      {"name" : "A", "path" : [ "F1","F2","T1","P1","F3","G1"]},
+      {"name" : "B", "path" : ["G2","T3","F2","F4","P2"]},
+      {"name" : "C", "path" : ["G3"]},
+      {"name" : "D", "path" : ["G4"]},
+      {"name" : "E", "path" : ["G5"]}
+    ]
+}

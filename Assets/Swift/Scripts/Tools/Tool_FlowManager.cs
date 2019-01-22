@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using System;
+using System.IO;
 
 public class Tool_FlowManager : ToolObject_UI {
 
@@ -13,8 +15,15 @@ public class Tool_FlowManager : ToolObject_UI {
     private List<FlowUI> FlowGroupsUI = new List<FlowUI>();
     private List<Flow> temp_Flow = new List<Flow>();
 
+    public string DataPath;
+    private string FullDataPath;
+
     private void Start()
     {
+       
+        FullDataPath = Application.dataPath + "/StreamingAssets/FlowLayout/FlowPaths.json";
+        LoadData(FullDataPath);
+
         FlowGroup_A = new string[3];
         FlowGroup_A[0] = "F1";
         FlowGroup_A[1] = "F2";
@@ -43,7 +52,32 @@ public class Tool_FlowManager : ToolObject_UI {
 
     }
 
-    
+    public void LoadData(string myPath)
+    {
+        FlowPathsList flowPathsList = new FlowPathsList();
+
+        string dataAsJSON = File.ReadAllText(myPath);
+        flowPathsList = JsonUtility.FromJson<FlowPathsList>(dataAsJSON);
+
+        foreach (var element in flowPathsList.FlowPath)
+        {
+            Debug.Log(element.name);
+            Debug.Log(element.path.Length);
+
+        }
+    }
+}
+
+[Serializable]
+public class FlowPath
+{
+    public string name;
+    public string[] path;
+}
 
 
+[Serializable]
+public class FlowPathsList
+{
+    public List<FlowPath> FlowPath = new List<FlowPath>();
 }
