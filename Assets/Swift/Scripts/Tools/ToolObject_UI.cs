@@ -13,7 +13,7 @@ public class ToolObject_UI : ToolObject {
     private Quaternion rotOrigin_UI_Canvas;
     private GameObject Tool_UIInteract;
 
-    void Start()
+    protected void Start()
     {
         posOrigin_UI_Canvas = UI_Canvas.transform.localPosition;
         rotOrigin_UI_Canvas = UI_Canvas.transform.localRotation;

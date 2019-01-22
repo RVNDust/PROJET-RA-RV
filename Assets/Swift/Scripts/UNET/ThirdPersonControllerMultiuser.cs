@@ -12,37 +12,32 @@ public class ThirdPersonControllerMultiuser : NetworkBehaviour
     /// The FreeLookCameraRig GameObject to configure for the UserMe
     /// </summary>
     GameObject goFreeLookCameraRig = null;
+    public GameObject CameraPivot;
 
 
 
     // Use this for initialization
     void Start()
     {
-        if(isLocalPlayer){
-            gameObject.tag = "VRLocalPlayer";
-        }
-        UpdateGoFreeLookCameraRig();
-        FollowLocalPlayer();
-        ActivateLocalPlayer();
-    }
+        GetComponent<ThirdPersonUserControl>().enabled = isLocalPlayer;
 
-    /// <summary>
-    /// Get the GameObject of the CameraRig
-    /// </summary>
-    protected void UpdateGoFreeLookCameraRig()
-    {
-        try
-        {
-            // Get the Camera to set as the followed camera
-            goFreeLookCameraRig = transform.Find("/FreeLookCameraRig").gameObject;
+        if (isLocalPlayer){
+            gameObject.tag = "VRLocalPlayer";
+            FindCameraRig();
+
             FreeLookCam freeLookCam = goFreeLookCameraRig.GetComponent<FreeLookCam>();
             freeLookCam.enabled = true;
-        }
-        catch (System.Exception ex)
-        {
-            Debug.LogWarning("Warning, no goFreeLookCameraRig found\n" + ex);
-        }
 
+            FollowLocalPlayer();
+        } else
+        {
+            Destroy(this);
+        }
+    }
+
+    protected void FindCameraRig()
+    {
+        goFreeLookCameraRig = transform.Find("/FreeLookCameraRig").gameObject;
     }
 
     /// <summary>
@@ -50,33 +45,12 @@ public class ThirdPersonControllerMultiuser : NetworkBehaviour
     /// </summary>
     protected void FollowLocalPlayer()
     {
-        if (isLocalPlayer)
+        if (goFreeLookCameraRig != null)
         {
-            if (goFreeLookCameraRig != null)
-            {
-                // find Avatar EthanHips
-                Transform transformFollow = transform.Find("EthanSkeleton") != null ? transform.Find("EthanSkeleton") : transform;
-                // call the SetTarget on the FreeLookCam attached to the FreeLookCameraRig
-                goFreeLookCameraRig.GetComponent<FreeLookCam>().SetTarget(transformFollow);
-                Debug.Log("ThirdPersonControllerMultiuser follow:" + transformFollow);
-            }
+            // find Avatar EthanHips
+            Transform transformFollow = CameraPivot.transform;
+            // call the SetTarget on the FreeLookCam attached to the FreeLookCameraRig
+            goFreeLookCameraRig.GetComponent<FreeLookCam>().SetTarget(transformFollow);
         }
-    }
-
-    protected void ActivateLocalPlayer()
-    {
-        // enable the ThirdPersonUserControl if it is a Loacl player = UserMe
-        // disable the ThirdPersonUserControl if it is not a Loacl player = UserOther
-        GetComponent<ThirdPersonUserControl>().enabled = isLocalPlayer;
-    }
-
-
-
-
-    // Update is called once per frame
-    void Update()
-    {
-        // Don't do anything if we are not the UserMe isLocalPlayer
-        if (!isLocalPlayer) return;
     }
 }

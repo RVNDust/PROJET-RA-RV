@@ -11,7 +11,7 @@ public class FlowUI : MonoBehaviour {
     public Text AnnualVolume;
     public Text AnnualDistance;
 
-    public List<Flow> Flow;
+    public GameObject AssociatedFlow;
 
     private void Start()
     {
@@ -19,14 +19,33 @@ public class FlowUI : MonoBehaviour {
         {
             ToggleValueChanged(EnableButton);
         });
+
+        ToggleValueChanged(EnableButton);
     }
 
-    void ToggleValueChanged(Toggle change)
+    private void Update()
     {
-        foreach(Flow f in Flow)
+        Distance.text = CalculateDistance().ToString();
+    }
+
+    private void ToggleValueChanged(Toggle change)
+    {
+         AssociatedFlow.SetActive(EnableButton.isOn);
+    }
+
+    private void OnDestroy()
+    {
+        Destroy(AssociatedFlow);
+    }
+
+    private float CalculateDistance()
+    {
+        float totalDistance = 0.0f;
+        foreach(Flow f in AssociatedFlow.GetComponentsInChildren<Flow>())
         {
-            f.gameObject.SetActive(EnableButton.isOn);
+            totalDistance += f.GetDistance();
         }
+        return totalDistance;
     }
 
 }

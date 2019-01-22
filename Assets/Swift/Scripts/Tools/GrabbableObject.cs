@@ -15,7 +15,6 @@ public class GrabbableObject : MonoBehaviour {
 	private Vector3 shrinkTransform;
 	private Vector3 shrinkVelocity;
 
-	private Vector3 repositionTransform;
 	private Vector3 repositionVelocity;
 
 	public GameObject boundingBoxPrefab;
@@ -33,10 +32,6 @@ public class GrabbableObject : MonoBehaviour {
 		{
 			Vector3 SmoothedScale = Vector3.SmoothDamp(gameObject.transform.localScale, shrinkTransform, ref shrinkVelocity, ShrinkTime);
 			gameObject.transform.localScale = SmoothedScale;
-			
-			repositionTransform = GetComponent<FixedJoint>().connectedBody.transform.position;
-			//Vector3 SmoothedTranslation = Vector3.SmoothDamp(gameObject.transform.position, repositionTransform, ref repositionVelocity, ShrinkTime);
-			//gameObject.transform.position = SmoothedTranslation;
 			
 			if(boundingBox == null)
 			{

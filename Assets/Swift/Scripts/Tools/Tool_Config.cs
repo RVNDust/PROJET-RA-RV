@@ -24,7 +24,9 @@ public class Tool_Config : ToolObject_UI {
 
 
 	// Use this for initialization
-	void Start () {
+	new void Start () {
+        base.Start();
+
 		machines = GameObject.FindGameObjectsWithTag("Machine");
 		dataPath = Application.dataPath + "/StreamingAssets/SavedLayout/" + "Swift " + GetDate() + ".json";
 		SaveConfig();

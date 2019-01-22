@@ -4,67 +4,67 @@ using UnityEngine;
 using System.Linq;
 using System;
 using System.IO;
+using UnityEngine.UI;
 
 public class Tool_FlowManager : ToolObject_UI {
 
     public GameObject UI_Scrollrect;
     public GameObject FlowGroupUIPrefab;
     public GameObject FlowPrefab;
+    public Text TotalAnnualDistanceText;
 
-    public string[] FlowGroup_A;
     private List<FlowUI> FlowGroupsUI = new List<FlowUI>();
-    private List<Flow> temp_Flow = new List<Flow>();
 
     public string DataPath;
     private string FullDataPath;
+    private FlowPathsList flowPathsList = new FlowPathsList();
 
-    private void Start()
+    new void Start()
     {
-       
+        base.Start();
+
         FullDataPath = Application.dataPath + "/StreamingAssets/FlowLayout/FlowPaths.json";
-        LoadData(FullDataPath);
+        flowPathsList = LoadData(FullDataPath);
 
-        FlowGroup_A = new string[3];
-        FlowGroup_A[0] = "F1";
-        FlowGroup_A[1] = "F2";
-        FlowGroup_A[2] = "F3";
-
-        var newFlow = Instantiate(new GameObject("Flow " + "A"));
-        temp_Flow.Add(Instantiate(FlowPrefab, newFlow.transform).GetComponent<Flow>());
-        temp_Flow.Last().gameObject.name = "Start to " + FlowGroup_A[0];
-
-        for (int i=0; i < FlowGroup_A.Length-1; i++)
+        for(int i = 0 ; i < flowPathsList.FlowPaths.Count ; i++)
         {
-            temp_Flow.Add(Instantiate(FlowPrefab, newFlow.transform).GetComponent<Flow>());
-            if (i > FlowGroup_A.Length - 1)
+            FlowGroupsUI.Add(Instantiate(FlowGroupUIPrefab, UI_Scrollrect.transform).GetComponent<FlowUI>());
+            var lastUI = FlowGroupsUI.Last();
+            lastUI.ProductName.text = flowPathsList.FlowPaths[i].name;
+            GameObject flowContainer = new GameObject("FlowPath_" + flowPathsList.FlowPaths[i].name);
+            lastUI.AssociatedFlow = flowContainer;
+
+            Color flowColor;
+            ColorUtility.TryParseHtmlString(flowPathsList.FlowPaths[i].color, out flowColor);
+            lastUI.EnableButton.GetComponent<Image>().color = flowColor;
+
+            for (int x = 0 ; x < flowPathsList.FlowPaths[i].path.Length + 1 ; x++ )
             {
-                temp_Flow.Last().gameObject.name = FlowGroup_A[FlowGroup_A.Length] + " to End";
-            }
-            else
-            {
-                temp_Flow.Last().gameObject.name = FlowGroup_A[i] + " to " + FlowGroup_A[i + 1];
+                Flow lastFlow = Instantiate(FlowPrefab, flowContainer.transform).GetComponent<Flow>();
+                string startPt = (x == 0) ? "FlowStart" : flowPathsList.FlowPaths[i].path[x - 1];
+                string endPt = (x == flowPathsList.FlowPaths[i].path.Length ) ? "FlowEnd" : flowPathsList.FlowPaths[i].path[x];
+                lastFlow.gameObject.name = startPt + " to " + endPt;
+                lastFlow.InitLine(startPt, endPt);
+                lastFlow.GetComponent<LineRenderer>().startColor = flowColor;
+                lastFlow.GetComponent<LineRenderer>().endColor = flowColor;
             }
         }
-        
-
-        FlowGroupsUI.Add(Instantiate(FlowGroupUIPrefab, UI_Scrollrect.transform).GetComponent<FlowUI>());
-        FlowGroupsUI.Last().Flow = temp_Flow;
-
     }
 
-    public void LoadData(string myPath)
+    private void Update()
     {
-        FlowPathsList flowPathsList = new FlowPathsList();
-
-        string dataAsJSON = File.ReadAllText(myPath);
-        flowPathsList = JsonUtility.FromJson<FlowPathsList>(dataAsJSON);
-
-        foreach (var element in flowPathsList.FlowPath)
+        float totalAnnualDistance = 0.0f;
+        foreach(FlowUI f in FlowGroupsUI)
         {
-            Debug.Log(element.name);
-            Debug.Log(element.path.Length);
-
+            totalAnnualDistance += float.Parse(f.AnnualDistance.text);
         }
+        TotalAnnualDistanceText.text = totalAnnualDistance.ToString();
+    }
+
+    public FlowPathsList LoadData(string myPath)
+    {
+        string dataAsJSON = File.ReadAllText(myPath);
+        return flowPathsList = JsonUtility.FromJson<FlowPathsList>(dataAsJSON);
     }
 }
 
@@ -73,11 +73,12 @@ public class FlowPath
 {
     public string name;
     public string[] path;
+    public string color;
 }
 
 
 [Serializable]
 public class FlowPathsList
 {
-    public List<FlowPath> FlowPath = new List<FlowPath>();
+    public List<FlowPath> FlowPaths = new List<FlowPath>();
 }
