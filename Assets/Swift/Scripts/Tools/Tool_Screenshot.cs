@@ -23,7 +23,7 @@ public class Tool_Screenshot : ToolObject {
         renderResult.ReadPixels(rect, 0, 0);
         string CurrentScreenShotName = System.DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + ".png";
         byte[] byteArray = renderResult.EncodeToPNG();
-        File.WriteAllBytes(Application.dataPath + "/StreamingAssets/Screenshots" + CurrentScreenShotName, byteArray);
+        File.WriteAllBytes(Application.dataPath + "/StreamingAssets/Screenshots/" + CurrentScreenShotName, byteArray);
         RenderTexture.ReleaseTemporary(renderTexture);
         myCamera.targetTexture = null;
     }

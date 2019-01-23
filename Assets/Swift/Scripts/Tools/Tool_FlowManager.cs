@@ -63,7 +63,6 @@ public class Tool_FlowManager : ToolObject_UI {
         {
             Debug.Log(element.name);
             Debug.Log(element.path.Length);
-
         }
     }
 }
