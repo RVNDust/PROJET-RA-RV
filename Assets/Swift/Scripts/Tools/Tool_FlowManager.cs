@@ -5,6 +5,7 @@ using System.Linq;
 using System;
 using System.IO;
 using UnityEngine.UI;
+using System.Globalization;
 
 public class Tool_FlowManager : ToolObject_UI {
 
@@ -56,7 +57,7 @@ public class Tool_FlowManager : ToolObject_UI {
         float totalAnnualDistance = 0.0f;
         foreach(FlowUI f in FlowGroupsUI)
         {
-            totalAnnualDistance += float.Parse(f.AnnualDistance.text);
+            totalAnnualDistance += float.Parse(f.AnnualDistance.text.Trim(), CultureInfo.InvariantCulture.NumberFormat);
         }
         TotalAnnualDistanceText.text = totalAnnualDistance.ToString();
     }

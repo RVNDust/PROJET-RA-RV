@@ -14,8 +14,9 @@ public class Tool_Image : ToolObject_UI {
     string finalPath;
     WWW localFile;
 
-    void Start()
+    new void Start()
     {
+        base.Start();
         StartCoroutine(imageAssociation(LoadConfig(JSONPath)));
     }
 
