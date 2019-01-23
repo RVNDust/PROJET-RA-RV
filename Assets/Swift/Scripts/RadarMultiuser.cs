@@ -27,7 +27,7 @@ public class RadarMultiuser : NetworkBehaviour
                 MyBlip = Instantiate(BlipPrefab, GameObjectLocalPlayerColor.transform.position, GameObjectLocalPlayerColor.transform.rotation);
                 MyBlip.GetComponent<Renderer>().material = PlayerLocalMat;
                 MyBlip.transform.SetParent(gameObject.transform);
-                Destroy(GameObjectLocalPlayerColor);
+                //Destroy(GameObjectLocalPlayerColor);
                 RadarObject.SetActive(true);
 
 

@@ -5,95 +5,104 @@ using UnityEngine.Networking;
 using UnityEngine;
 using System.Linq;
 
-public class Radar : MonoBehaviour
+public class Radar : NetworkBehaviour
 {
     public List<GameObject> trackedObjects;
     public List<GameObject> radarObjects;
     public GameObject radarPrefab;
     public List<GameObject> borderObjects;
     public float switchDistance;
-    public Transform Blip;
-    public Material myMat;
+    public Transform UserMe;
+    public Material orange;
+    public Material green;
     public int previousNum;
+    public GameObject ArrowExist;
+    public GameObject BorderExist;
+    private int frames;
 
     // Use this for initialization
     void Start()
     {
-        getRadarObjects();
+        frames = 0;
+        previousNum = 0;
+        if (GetComponent<NetworkIdentity>().isLocalPlayer)
+        {
+            gameObject.tag = "UserMe";
+        }
+        else
+        {
+            gameObject.tag = "UserOther";
+        }
+
     }
 
-    void getRadarObjects()
+    void ClearAllArraysForMe()
     {
-        if (radarObjects != null || radarObjects.Count != 0)
+        if (GetComponent<NetworkIdentity>().isLocalPlayer)
         {
-            for (int i = 0; i < radarObjects.ToArray().Length; i++)
+            if (frames > GetComponent<FPSDisplay>().fps / 10)
             {
-                Destroy(borderObjects[i]);
-                Destroy(radarObjects[i]);
+                for (int i = 0; i < borderObjects.Count; i++)
+                {
+                    Destroy(borderObjects[i]);
+                    Debug.Log("Deleted");
+                }
+                frames = 0;
+                borderObjects.Clear();
             }
-        }
-
-        previousNum = GameObject.FindGameObjectsWithTag("Players").Length;
-        foreach (GameObject fooObj in GameObject.FindGameObjectsWithTag("Players"))
-        {
-            Debug.Log(GameObject.FindGameObjectsWithTag("Players").Length);
-            if (fooObj.GetComponent<NetworkIdentity>().isLocalPlayer == true)
-            {
-                Debug.Log("Detected Local Player");
-                fooObj.name = "PlayerMe";
-            }
-            else
-            {
-                fooObj.name = "PLayerOther";
-                trackedObjects.Add(fooObj);
-                Debug.Log("Detected player:" + fooObj);
-            }
-        }
-        radarObjects = new List<GameObject>();
-        borderObjects = new List<GameObject>();
-
-        foreach (GameObject o in trackedObjects)
-        {
-            int name = 1;
-            GameObject k;
-            k = Instantiate(radarPrefab, o.transform.position, o.transform.rotation * Quaternion.Euler(90, 0, 0));
-            k.name = "Arrow";
-            k.transform.parent = o.transform;
-
-            radarObjects.Add(k);
-
-            GameObject j;
-            j = Instantiate(radarPrefab, o.transform.position, o.transform.rotation * Quaternion.Euler(90, 0, 0));
-            j.name = "Border";
-            j.transform.parent = o.transform;
-            j.GetComponent<Renderer>().material = myMat;
-
-            borderObjects.Add(j);
-            name++;
         }
     }
+
+
     // Update is called once per frame
     void Update()
     {
-
-        for (int i = 0; i < radarObjects.ToArray().Length; i++)
+        if (GetComponent<NetworkIdentity>().isLocalPlayer)
         {
-            if (Vector3.Distance(radarObjects[i].transform.position, transform.position) > switchDistance)
+            // ClearAllArraysForMe();
+            previousNum = GameObject.FindGameObjectsWithTag("UserOther").Length;
+            foreach (GameObject fooObj in GameObject.FindGameObjectsWithTag("UserOther"))
             {
-                Blip.LookAt(radarObjects[i].transform);
-                borderObjects[i].transform.position = transform.position + switchDistance * Blip.forward;
-                Debug.Log("il est passé par ici!");
-                //borderObjects[i].layer = LayerMask.NameToLayer("RadarBlips");
-                radarObjects[i].layer = LayerMask.NameToLayer("Invisible");
-                // borderObjects[i].transform.parent = transform;
+                fooObj.name = "UserOther";
+                if (gameObject.tag == "UserOther")
+                {
+                    BorderExist.SetActive(true);
+                    // ArrowExist.SetActive(true);
+                }
+                else
+                {
+                    Destroy(BorderExist);
+                    Destroy(ArrowExist);
+                }
+                ClearAllArraysForMe();
+                GameObject a = Instantiate(radarPrefab, fooObj.GetComponent<Radar>().ArrowExist.transform.position, fooObj.GetComponent<Radar>().ArrowExist.transform.rotation);
+                a.SetActive(true);
+                if (Vector3.Distance(fooObj.transform.position, transform.position) > switchDistance)
+                {
+                    UserMe.LookAt(fooObj.GetComponent<Radar>().ArrowExist.transform);
+                    a.transform.transform.position = transform.position + switchDistance * UserMe.forward;
+                    a.transform.rotation = fooObj.GetComponent<Radar>().ArrowExist.transform.rotation;
+                    a.GetComponent<Renderer>().material = orange;
+                    //BorderExist.transform.position = transform.position + switchDistance * UserMe.forward;
+                    //BorderExist.transform.rotation = fooObj.GetComponent<Radar>().ArrowExist.transform.rotation;
+                    //BorderExist.GetComponent<Renderer>().material = orange;
+                    Debug.Log(fooObj.name + " Orange");
+                }
+                else
+                {
+
+                    a.transform.position = fooObj.GetComponent<Radar>().ArrowExist.transform.position;
+                    a.transform.rotation = fooObj.GetComponent<Radar>().ArrowExist.transform.rotation;
+                    a.GetComponent<Renderer>().material = green;
+                    //BorderExist.transform.position = fooObj.GetComponent<Radar>().ArrowExist.transform.position;
+                    //BorderExist.transform.rotation = fooObj.GetComponent<Radar>().ArrowExist.transform.rotation;
+                    //BorderExist.GetComponent<Renderer>().material = green;
+                    Debug.Log(fooObj.name + "Green");
+                }
+                borderObjects.Add(a);
+
             }
-            if (Vector3.Distance(radarObjects[i].transform.position, transform.position) < switchDistance)
-            {
-                radarObjects[i].layer = LayerMask.NameToLayer("RadarBlips");
-                //borderObjects[i].layer = LayerMask.NameToLayer("Invisible");
-                Debug.Log("Et repassera par la!");
-            }
+            frames++;
         }
     }
-
 }
