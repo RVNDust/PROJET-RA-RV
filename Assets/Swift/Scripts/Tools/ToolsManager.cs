@@ -169,8 +169,7 @@ public class ToolsManager : MonoBehaviour {
 		return id_currentTool;
 	}
 
-	// a ranger 
-
+    // Only used if there is no UI attached to the ToolsManager
 	public int GetNextToolId()
 	{
 		if(id_currentTool+1 > ToolsList.Count-1)

@@ -34,11 +34,8 @@ public class Tool_Image : ToolObject_UI {
         localFile = new WWW(Application.dataPath + myJSONPath);
 
         yield return localFile;
-        //myTexture = Resources.Load(myJSONPath) as Texture2D;
         myTexture = localFile.texture;
       
-
-        //Debug.Log(myTexture);
         ImageGameObject.GetComponent<RawImage>().texture = myTexture;
 
     }

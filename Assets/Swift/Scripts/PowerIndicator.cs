@@ -6,7 +6,6 @@ public class PowerIndicator : MonoBehaviour {
 
 	public GameObject ElectricityIconPrefab;
     public GameObject NonElectricityPrefab;
-    //public GameObject NonElectricityIconPrefab;
 	public string ElectricityTag;
 	public float hoverSpeed = 0.5f;
     public float hoverDistance = 2.0f;
@@ -29,9 +28,6 @@ public class PowerIndicator : MonoBehaviour {
             ElectricityIconObject = Instantiate(ElectricityIconPrefab, gameObject.transform);
             ElectricityIconObject.transform.localPosition = new Vector3(0, hoverDistance, 0);
             var scale = ElectricityIconObject.transform.localScale;
-            /*ElectricityIconObject.transform.localScale = new Vector3(scale.x / other.gameObject.transform.localScale.x,
-                scale.y / other.gameObject.transform.localScale.y,
-                scale.z / other.gameObject.transform.localScale.z);*/
         }
 
     }

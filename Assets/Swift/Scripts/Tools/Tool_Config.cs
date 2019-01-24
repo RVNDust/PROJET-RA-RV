@@ -18,13 +18,13 @@ public class Tool_Config : ToolObject_UI {
 	private Machine loadObject;
 
 	public GameObject SaveButton;
+    public GameObject SavePanel;
 	public GameObject LoadButton;
 	public GameObject LoadPanel;
 
 
-
-	// Use this for initialization
-	new void Start () {
+    // Use this for initialization
+    new void Start () {
         base.Start();
 
 		machines = GameObject.FindGameObjectsWithTag("Machine");
@@ -56,6 +56,7 @@ public class Tool_Config : ToolObject_UI {
 		Debug.Log(json);
 		File.WriteAllText(dataPath, json);
 
+        StartCoroutine(Refresh());
 	}
 
 	public void LoadData(string myButton)
@@ -93,7 +94,7 @@ public class Tool_Config : ToolObject_UI {
 
 	public void SaveConfig(){
 		GameObject newSaveButton = Instantiate(SaveButton) as GameObject;
-		newSaveButton.transform.SetParent(LoadPanel.transform, false);
+		newSaveButton.transform.SetParent(SavePanel.transform, false);
 		newSaveButton.name = "Save";
 		newSaveButton.GetComponentInChildren<Text>().text = newSaveButton.name;
 		var button = newSaveButton.GetComponent<UnityEngine.UI.Button>();
@@ -111,7 +112,9 @@ public class Tool_Config : ToolObject_UI {
 			newLoadButton.GetComponentInChildren<Text>().text = Path.GetFileName(filePath);
 			var button = newLoadButton.GetComponent<UnityEngine.UI.Button>();
 			button.onClick.AddListener(() => LoadData(newLoadButton.name));
-		}
+
+            StartCoroutine(LoadImage(filePath, newLoadButton));
+        }
 	}
 
 
@@ -155,6 +158,31 @@ public class Tool_Config : ToolObject_UI {
         myCamera.targetTexture = null;
         RenderTexture.active = null;
         myCamera.enabled = false;
+    }
+
+    private IEnumerator LoadImage(string path, GameObject button)
+    {
+
+        string name = Path.GetFileNameWithoutExtension(path);
+        WWW localFile = new WWW(Application.dataPath + "/StreamingAssets/Screenshots/" + name + ".png"); 
+
+        yield return localFile;
+        Texture2D myTexture = localFile.texture;
+        button.GetComponentInChildren<RawImage>().texture = myTexture;
+    }
+
+    private IEnumerator Refresh()
+    {
+        yield return new WaitForFixedUpdate();
+
+        foreach(Transform t in LoadPanel.transform)
+        {
+            if(t.gameObject != LoadPanel)
+            {
+                Destroy(t.gameObject);
+            }
+        }
+        LoadConfig();
     }
 
 

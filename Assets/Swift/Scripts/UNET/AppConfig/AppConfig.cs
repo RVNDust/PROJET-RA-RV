@@ -37,7 +37,15 @@ public class AppConfig {
     /// <param name="filePath"></param>
     public void UpdateValuesFromJsonFile(string filePath)
     {
-        UpdateValuesFromJsonString(System.IO.File.ReadAllText(filePath));
+        if (Application.platform == RuntimePlatform.Android)
+        {
+            WWW reader = new WWW(filePath);
+            while(!reader.isDone) { }
+            UpdateValuesFromJsonString(reader.text);
+        } else
+        {
+            UpdateValuesFromJsonString(System.IO.File.ReadAllText(filePath));
+        }
     }
 
     /// <summary>
@@ -47,7 +55,7 @@ public class AppConfig {
     {
         Debug.Log(Application.absoluteURL);
         string path = System.IO.Path.Combine(Application.streamingAssetsPath, Application.productName+".AppConfig.json");
-       
+
         UpdateValuesFromJsonFile(path);
     }
 
