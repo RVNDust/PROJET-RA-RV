@@ -42,7 +42,7 @@ public class Tool_Radar : ToolObject {
             GameObject playerArrow = Instantiate(ArrowPrefab, go.transform.position + arrowPos, go.transform.rotation, go.transform);
             arrowsList.Add(playerArrow);
 
-            if(Vector3.Magnitude(go.transform.position - transform.position) > SwitchDistance)
+            if(Vector3.SqrMagnitude(go.transform.position - transform.position) > SwitchDistance * SwitchDistance)
             {
                 playerArrow.transform.position = GetLocalPlayer().transform.position + SwitchDistance * (go.transform.position - GetLocalPlayer().transform.position).normalized;
                 playerArrow.transform.position += arrowPos;

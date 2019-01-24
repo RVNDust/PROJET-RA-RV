@@ -41,7 +41,7 @@ public class GrabbableObject : MonoBehaviour {
 				boundingBox.transform.localScale = boxSize;
 			}
 
-			LayerMask layerMask = LayerMask.GetMask("Ground"); // Put as private variable
+			LayerMask layerMask = LayerMask.GetMask("BoundingBoxCollider"); // Put as private variable
 			RaycastHit hit;
 			Debug.DrawRay(transform.position, Vector3.down, Color.red, 50.0f);
 			if(Physics.Raycast(transform.position, Vector3.down, out hit, Mathf.Infinity, layerMask))

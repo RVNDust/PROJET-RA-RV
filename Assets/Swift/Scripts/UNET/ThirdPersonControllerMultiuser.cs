@@ -13,7 +13,7 @@ public class ThirdPersonControllerMultiuser : NetworkBehaviour
     /// </summary>
     GameObject goFreeLookCameraRig = null;
     public GameObject CameraPivot;
-
+    public TopViewPosition topViewScript;
 
 
     // Use this for initialization
@@ -31,6 +31,7 @@ public class ThirdPersonControllerMultiuser : NetworkBehaviour
             FollowLocalPlayer();
         } else
         {
+            Destroy(topViewScript);
             Destroy(this);
         }
     }

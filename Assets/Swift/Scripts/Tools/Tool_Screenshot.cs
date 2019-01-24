@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 
+[RequireComponent(typeof(AudioSource))]
 public class Tool_Screenshot : ToolObject {
 
     private Camera myCamera;
+
+    public AudioClip ScreenshotAudio;
 
     private void Start()
     {
@@ -15,7 +18,7 @@ public class Tool_Screenshot : ToolObject {
     IEnumerator TakeScreenshot(int width, int height)
     {
         yield return new WaitForEndOfFrame();
-
+        
         myCamera.targetTexture = RenderTexture.GetTemporary(width, height, 16);
         RenderTexture renderTexture = myCamera.targetTexture;
         Texture2D renderResult = new Texture2D(renderTexture.width, renderTexture.height, TextureFormat.ARGB32, false);
@@ -31,6 +34,7 @@ public class Tool_Screenshot : ToolObject {
     protected override void OnInteractDown()
 	{
         StartCoroutine(TakeScreenshot(Screen.width, Screen.height));
+        GetComponent<AudioSource>().PlayOneShot(ScreenshotAudio);
 	}
 
 }
