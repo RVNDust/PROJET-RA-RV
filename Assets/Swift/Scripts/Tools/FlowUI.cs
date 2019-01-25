@@ -5,10 +5,15 @@ using UnityEngine.UI;
 
 public class FlowUI : MonoBehaviour {
 
+    [Tooltip("The button to enable the AssociatedFlow.")]
     public Toggle EnableButton;
+    [Tooltip("Text that will contain the product name.")]
     public Text ProductName;
+    [Tooltip("Text that will contain the total distance.")]
     public Text Distance;
+    [Tooltip("Text that will contain the annual volume.")]
     public Text AnnualVolume;
+    [Tooltip("Text that will contain the annual distance.")]
     public Text AnnualDistance;
 
     public GameObject AssociatedFlow;
@@ -38,6 +43,9 @@ public class FlowUI : MonoBehaviour {
         Destroy(AssociatedFlow);
     }
 
+    /// <summary>
+    /// Add up the distances of every Flow elements inside the AssociatedFlow component
+    /// </summary>
     private float CalculateDistance()
     {
         float totalDistance = 0.0f;

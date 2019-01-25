@@ -6,18 +6,20 @@ using Valve.VR.InteractionSystem;
 [RequireComponent(typeof(VelocityEstimator))]
 public class GrabbableObject : MonoBehaviour {
 
-	public bool ShrinkOnGrab = false;
-	public float ShrinkFactor = 2.0f;
-	public float ShrinkTime = 0.5f;
+    [Tooltip("Does the object shrink when the user grabs it?")]
+    public bool ShrinkOnGrab = false;
+    [Tooltip("By how much does the object shrink when the user grabs it.")]
+    public float ShrinkFactor = 2.0f;
+    [Tooltip("How long does it take for the object to shrink fully when it is grabbed.")]
+    public float ShrinkTime = 0.5f;
 
 	private bool grabbed;
-	private Vector3 originalTransform;
-	private Vector3 shrinkTransform;
+	private Vector3 originalTransform; // The size of the object at its original size
+	private Vector3 shrinkTransform; // The size of the shrinked object, calculated on Awake()
 	private Vector3 shrinkVelocity;
 
-	private Vector3 repositionVelocity;
-
-	public GameObject boundingBoxPrefab;
+    [Tooltip("Prefab of the bounding box.")]
+    public GameObject boundingBoxPrefab;
 	private GameObject boundingBox;
 
 	void Awake()
@@ -30,9 +32,11 @@ public class GrabbableObject : MonoBehaviour {
 	{
 		if(ShrinkOnGrab && grabbed)
 		{
+            // Shrink the object by shrinking it linearly
 			Vector3 SmoothedScale = Vector3.SmoothDamp(gameObject.transform.localScale, shrinkTransform, ref shrinkVelocity, ShrinkTime);
 			gameObject.transform.localScale = SmoothedScale;
 			
+            // Create a bounding box of the original size (at the time of grab)
 			if(boundingBox == null)
 			{
 				boundingBox = Instantiate(boundingBoxPrefab);
@@ -41,9 +45,9 @@ public class GrabbableObject : MonoBehaviour {
 				boundingBox.transform.localScale = boxSize;
 			}
 
-			LayerMask layerMask = LayerMask.GetMask("BoundingBoxCollider"); // Put as private variable
+            // Create a raycast below the grabbed object to show the original bounding box of it
+			LayerMask layerMask = LayerMask.GetMask("BoundingBoxCollider");
 			RaycastHit hit;
-			Debug.DrawRay(transform.position, Vector3.down, Color.red, 50.0f);
 			if(Physics.Raycast(transform.position, Vector3.down, out hit, Mathf.Infinity, layerMask))
 			{
 				boundingBox.transform.position = hit.point + new Vector3(0, 0.1f, 0);
@@ -70,7 +74,10 @@ public class GrabbableObject : MonoBehaviour {
 		grabbed = false;
 	}
 
-	private Bounds CalculateLocalBounds()
+    /// <summary>
+    /// Add up every child collider bounds to get the object's local bounds
+    /// </summary>
+    private Bounds CalculateLocalBounds()
     {
          Quaternion currentRotation = this.transform.rotation;
          this.transform.rotation = Quaternion.Euler(0f,0f,0f);
@@ -79,7 +86,6 @@ public class GrabbableObject : MonoBehaviour {
          {
              bounds.Encapsulate(renderer.bounds);
          }
-         Debug.Log("The local bounds of this model is " + bounds);
 		 return bounds;
     }
 }

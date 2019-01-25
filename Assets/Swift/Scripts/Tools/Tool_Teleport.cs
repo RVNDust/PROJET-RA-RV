@@ -15,7 +15,6 @@ public class Tool_Teleport : ToolObject {
 	{
         TeleportReleased();
 	}
-	
 
     /// <summary>
     /// Adds a pointer at the tip of the controller for teleporation

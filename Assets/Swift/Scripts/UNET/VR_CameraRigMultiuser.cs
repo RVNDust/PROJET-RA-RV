@@ -7,10 +7,14 @@ using Valve.VR;
 // Make the SteamVR available in multiplayer by deactivate script for UserOther
 // Supports version # SteamVR Unity Plugin - v2.0.1
 public class VR_CameraRigMultiuser : NetworkBehaviour {
-    // Reference to SteamController
+
+    [Tooltip("Container for the parent left & right hand and head.")]
     public GameObject SteamVRLeft, SteamVRRight, SteamVRCamera;
+    [Tooltip("Container for the model of the left & right hand.")]
     public GameObject UserOtherLeftHandModel, UserOtherRightHandModel;
+    [Tooltip("The tool canvases used by the VR player.")]
     public GameObject ToolCanvasLeft, ToolCanvasRight;
+    [Tooltip("Any script that needs to be removed if the user is not the local player. (THEY WILL BE REMOVED IN ASCENDING ORDER!)")]
     public MonoBehaviour[] ScriptsToRemove;
     private GameObject goFreeLookCameraRig;
 
@@ -69,6 +73,9 @@ public class VR_CameraRigMultiuser : NetworkBehaviour {
         }
     }
 
+    /// <summary>
+    /// This method will give autorithy to this player after checking if the authority was already given to someone else (and removing it if that's the case).
+    /// </summary>
     [Command]
      public void CmdSetAuth(NetworkInstanceId objectId, NetworkIdentity player)
      {
@@ -91,6 +98,9 @@ public class VR_CameraRigMultiuser : NetworkBehaviour {
          }        
      }
 
+    /// <summary>
+    /// Give authority over the gameObject to this player. (Dangerous, does not check for any other autorithy!)
+    /// </summary>
     [Command]
      public void CmdAddAuth(GameObject go)
      {
@@ -98,7 +108,10 @@ public class VR_CameraRigMultiuser : NetworkBehaviour {
          ni.AssignClientAuthority(base.connectionToClient);
      }
 
-     [Command]
+    /// <summary>
+    /// Remove this player's authority over the gameObject.
+    /// </summary>
+    [Command]
      public void CmdRemoveAuth(GameObject go)
      {
          NetworkIdentity ni = go.GetComponent<NetworkIdentity>();

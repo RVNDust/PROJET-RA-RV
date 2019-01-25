@@ -9,7 +9,6 @@ public class ViveUILaserPointer : IUILaserPointer
     protected override void Initialize()
     {
         base.Initialize();
-        Debug.Log("Initialize");
     }
 
     public override bool ButtonDown()

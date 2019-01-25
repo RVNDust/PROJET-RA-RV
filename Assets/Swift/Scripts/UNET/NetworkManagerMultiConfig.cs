@@ -15,11 +15,6 @@ public class NetworkManagerMultiConfig : NetworkManager {
 		AppConfig.Inst.UpdateValuesFromJsonFile();
 	}
 	
-	// Update is called once per frame
-	void Update () {
-		
-	}
-
     /// <summary>
     /// Called from the client to ask to be added on the shared scene,
     /// Therefore it allows to the client to specify the type of prefab to use ("HTC" or "PC keyboard mouse"

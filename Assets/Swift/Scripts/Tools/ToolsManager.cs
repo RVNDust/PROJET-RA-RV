@@ -17,6 +17,7 @@ public class ToolsManager : MonoBehaviour {
 
 	private void Update()
 	{
+        // If there is any input, transmit it via a message to every children ToolObject(s)
 		#region Input SendMessage
 		if(SteamVR_Input.Swift.inActions.Interact.GetState(inputSource))
 		{
@@ -135,9 +136,22 @@ public class ToolsManager : MonoBehaviour {
 		return ToolsList[id].GetComponent<ToolObject>().toolIcon;
 	}
 
-	// Any methods that relate to the currently equipped tool
+    // Only used if there is no UI attached to the ToolsManager
+    public int GetNextToolId()
+    {
+        if (id_currentTool + 1 > ToolsList.Count - 1)
+        {
+            return 0;
+        }
+        return id_currentTool + 1;
+    }
 
-	public void SetCurrentTool(int id)
+    // Any methods below relate to the currently equipped tool
+
+    /// <summary>
+    /// Destroy the current tool and instantiate a new tool at 'id' to replace it.
+    /// </summary>
+    public void SetCurrentTool(int id)
 	{
 		if(GetCurrentToolId() != id)
 		{
@@ -150,7 +164,7 @@ public class ToolsManager : MonoBehaviour {
 			currentTool.transform.parent = gameObject.transform;
 			currentTool.transform.localPosition = Vector3.zero;
 			currentTool.transform.localRotation = Quaternion.identity;
-            currentTool.GetComponent<ToolObject>().inputSource = inputSource;
+            currentTool.GetComponent<ToolObject>().inputSource = inputSource; // Give the created ToolObject the enum of the current hand (Left, Right, Any)
 		}
 	}
 
@@ -167,16 +181,6 @@ public class ToolsManager : MonoBehaviour {
 	public int GetCurrentToolId()
 	{
 		return id_currentTool;
-	}
-
-    // Only used if there is no UI attached to the ToolsManager
-	public int GetNextToolId()
-	{
-		if(id_currentTool+1 > ToolsList.Count-1)
-		{
-			return 0;
-		}
-		return id_currentTool+1;
 	}
 
 }

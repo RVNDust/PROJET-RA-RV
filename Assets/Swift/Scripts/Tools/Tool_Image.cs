@@ -7,7 +7,9 @@ using UnityEngine;
 
 public class Tool_Image : ToolObject_UI {
 
+    [Tooltip("File path to the JSON file containing the path to the image.")]
     public string JSONPath = "Default";
+    [Tooltip("The image object on the canvas.")]
     public GameObject ImageGameObject;
     Texture2D myTexture;
 
@@ -20,6 +22,9 @@ public class Tool_Image : ToolObject_UI {
         StartCoroutine(imageAssociation(LoadConfig(JSONPath)));
     }
 
+    /// <summary>
+    /// Search and load the JSON file that gives the path of the image
+    /// </summary>
     string LoadConfig(string JSONPath)
     {
         string fullPath = Application.dataPath + "/StreamingAssets/ImageConfigLayout/" + JSONPath + ".json";
@@ -29,6 +34,9 @@ public class Tool_Image : ToolObject_UI {
         return configurationImage.imagePath;
     }
 
+    /// <summary>
+    /// Given a path, find the image and put it as a texture on the image component
+    /// </summary>
     private IEnumerator imageAssociation(string myJSONPath)
     {
         localFile = new WWW(Application.dataPath + myJSONPath);
@@ -37,7 +45,6 @@ public class Tool_Image : ToolObject_UI {
         myTexture = localFile.texture;
       
         ImageGameObject.GetComponent<RawImage>().texture = myTexture;
-
     }
 
     [Serializable]

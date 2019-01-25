@@ -7,12 +7,17 @@ using UnityEngine.Networking;
 
 public class Tool_Grab : ToolObject {
 
-	public SphereCollider HoverSphere;
+    [Tooltip("SphereCollider used to detect objects. (Will be created if empty)")]
+    public SphereCollider HoverSphere;
+    [Tooltip("The amount of time (in seconds) before an object is removed from authority")]
     public float AuthorityRemovalTimer = 0.1f;
     
     private GameObject GrabbedObject;
 
-	void Awake()
+    /// <summary>
+    /// Initalize the necessary SphereCollider and/or RigidBody used by this component.
+    /// </summary>
+    void Awake()
 	{
 		if(HoverSphere == null)
         {
@@ -43,7 +48,7 @@ public class Tool_Grab : ToolObject {
     /// </summary>
     private void GrabObject()
     {
-        LayerMask DefaultLayer = 1 << LayerMask.NameToLayer("Default") | 1 << LayerMask.NameToLayer("Machines");
+        LayerMask DefaultLayer = 1 << LayerMask.NameToLayer("Default") | 1 << LayerMask.NameToLayer("Machines"); // Only allow grabbing of objects from layer 'Default' or 'Machines'
         Collider[] CollisionResult = Physics.OverlapSphere(HoverSphere.transform.position, HoverSphere.radius, DefaultLayer);
         if(CollisionResult.Length > 0)
         {         
@@ -51,17 +56,17 @@ public class Tool_Grab : ToolObject {
             if(GrabbedObject.GetComponent<GrabbableObject>())
             {
                 GrabbedObject.GetComponent<GrabbableObject>().SendMessage("OnGrab");
-                GrabbedObject.GetComponent<VelocityEstimator>().BeginEstimatingVelocity();
-                Debug.Log("Grabbed object " + GrabbedObject.name);
+                GrabbedObject.GetComponent<VelocityEstimator>().BeginEstimatingVelocity(); // Start estimating the velocity to throw the object later
                 GetLocalPlayer().GetComponent<VR_CameraRigMultiuser>().CmdSetAuth(GrabbedObject.GetComponent<NetworkIdentity>().netId, GetLocalPlayer().GetComponent<NetworkIdentity>());
-                
+
                 GrabbedObject.transform.position = gameObject.transform.position;
-                // GrabbedObject.transform.localRotation = gameObject.transform.rotation; Too much discomfort for the user when holding machines
+                // We verify if there is no fixed joint, if there isn't then we create one
                 if(!GrabbedObject.GetComponent<FixedJoint>()){
                     FixedJoint fx = GrabbedObject.AddComponent<FixedJoint>();
                     fx.breakForce = Mathf.Infinity;
                     fx.breakTorque = Mathf.Infinity;
                 }
+                // If there would've already been a fixed joint (another player is holding the object) then we just change the connectedBody reference
                 GrabbedObject.GetComponent<FixedJoint>().connectedBody = gameObject.GetComponent<Rigidbody>();
             }
         }
@@ -70,11 +75,14 @@ public class Tool_Grab : ToolObject {
     /// <summary>
     /// Releases any object held inside this hand
     /// </summary>
+    /// <param name="immediate">Do we need to let go of the object immediately without making use of the delayed authority removal ?</param>
     private void ReleaseObject(bool immediate){
         if(GrabbedObject != null) 
         {
             if(GrabbedObject.GetComponent<FixedJoint>())
             {
+                // The following condition checks if the GrabbedObject is connected to us, if it is not then someone else picked it up from our hand
+                // We therefore do not need to remove the authority and can just change it to null
                 if (GrabbedObject.GetComponent<FixedJoint>().connectedBody == gameObject.GetComponent<Rigidbody>())
                 {
                     Destroy(GrabbedObject.GetComponent<FixedJoint>());

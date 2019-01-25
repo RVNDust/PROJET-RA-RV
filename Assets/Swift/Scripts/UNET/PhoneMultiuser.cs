@@ -13,6 +13,7 @@ public class PhoneMultiuser : NetworkBehaviour {
         if(isLocalPlayer){
             gameObject.tag = "VRLocalPlayer";
             Destroy(FindCameraRig());
+            // Initialize Vuforia, then enable the behaviour on the ARCamera in the scene
             VuforiaRuntime.Instance.InitVuforia();
             ARCamera = transform.Find("/ARCamera").gameObject;
             ARCamera.tag = "MainCamera";

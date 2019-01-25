@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Tool_TopView : ToolObject
 {
-
+    [Tooltip("Height of the top view")]
     public float Height = 10.0f;
 
     private GameObject Ground;
@@ -23,6 +23,9 @@ public class Tool_TopView : ToolObject
         GoTopViewPosition();
     }
 
+    /// <summary>
+    /// Teleport the teleportable area and the player upward by a given height.
+    /// </summary>
     private void GoTopViewPosition()
     {
         Vector3 heightPos = new Vector3(0, Height, 0);

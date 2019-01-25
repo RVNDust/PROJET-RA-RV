@@ -4,11 +4,17 @@ using UnityEngine;
 
 public class PowerIndicator : MonoBehaviour {
 
-	public GameObject ElectricityIconPrefab;
+    [Tooltip("Prefab of the electricity icon")]
+    public GameObject ElectricityIconPrefab;
+    [Tooltip("Prefab of the non-powered icon")]
     public GameObject NonElectricityPrefab;
-	public string ElectricityTag;
-	public float hoverSpeed = 0.5f;
+    [Tooltip("Tag used to detect if a collider gives electricity")]
+    public string ElectricityTag;
+    [Tooltip("How high does the icon stand over the object")]
     public float hoverDistance = 2.0f;
+    [Tooltip("How fast does the icon hover over the object")]
+    public float hoverSpeed = 0.5f;
+    [Tooltip("How far does the icon hover reach")]
     public float hoverAmplitude = 0.25f;
 
 	private GameObject ElectricityIconObject;

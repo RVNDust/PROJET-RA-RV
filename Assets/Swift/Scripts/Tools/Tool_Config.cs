@@ -9,18 +9,22 @@ using UnityEngine.Networking;
 
 public class Tool_Config : ToolObject_UI {
 
-	GameObject[] machines;
-
-	string jsonString;
-	string dataPath;
-	string json;
-    private string saveDate;
-	private Machine loadObject;
-
-	public GameObject SaveButton;
+    [Tooltip("Prefab for the save button.")]
+    public GameObject SaveButton;
+    [Tooltip("Container where the save button will be instantiated.")]
     public GameObject SavePanel;
-	public GameObject LoadButton;
-	public GameObject LoadPanel;
+    [Tooltip("Prefab for the load button.")]
+    public GameObject LoadButton;
+    [Tooltip("Container where the load buttons will be instanciated.")]
+    public GameObject LoadPanel;
+
+    GameObject[] machines;
+
+    string jsonString;
+    string dataPath;
+    string json;
+    private string saveDate;
+    private Machine loadObject;
 
 
     // Use this for initialization
@@ -33,8 +37,10 @@ public class Tool_Config : ToolObject_UI {
 		LoadConfig();
 	}
 
-
-	public void SaveData()
+    /// <summary>
+    /// Saves the current layout into a JSON file.
+    /// </summary>
+    public void SaveData()
 	{
         StartCoroutine(TakeScreenshot(Screen.width, Screen.height));
 
@@ -53,13 +59,15 @@ public class Tool_Config : ToolObject_UI {
 		}
 		
 		json = JsonUtility.ToJson(myList);
-		Debug.Log(json);
 		File.WriteAllText(dataPath, json);
 
         StartCoroutine(Refresh());
 	}
 
-	public void LoadData(string myButton)
+    /// <summary>
+    /// Loads the layout associated with the selected button
+    /// </summary>
+    public void LoadData(string myButton)
 	{
 		ListOfMachines myListofMachines = new ListOfMachines();
 		myListofMachines.machinesList = new List<Machine>();
@@ -71,6 +79,9 @@ public class Tool_Config : ToolObject_UI {
 
     }
 
+    /// <summary>
+    /// Wait a short time before setting the position of the machines to ensure that the autorithy is correctly transferred.
+    /// </summary>
     IEnumerator SetMachinesPosition(ListOfMachines myListofMachines)
     {
         yield return new WaitForSeconds(0.5f);
@@ -80,7 +91,6 @@ public class Tool_Config : ToolObject_UI {
             GetLocalPlayer().GetComponent<VR_CameraRigMultiuser>().CmdSetAuth(myTarget.GetComponent<NetworkIdentity>().netId, GetLocalPlayer().GetComponent<NetworkIdentity>());
             myTarget.transform.position = element.Position + Vector3.up;
             myTarget.transform.rotation = element.Rotation;
-            //GetLocalPlayer().GetComponent<VR_CameraRigMultiuser>().CmdRemoveAuth(myTarget);
         }
 
         yield return new WaitForSeconds(0.5f);
@@ -92,7 +102,10 @@ public class Tool_Config : ToolObject_UI {
         }
     }
 
-	public void SaveConfig(){
+    /// <summary>
+    /// Create a button to save the current layout to a JSON file.
+    /// </summary>
+    public void SaveConfig(){
 		GameObject newSaveButton = Instantiate(SaveButton) as GameObject;
 		newSaveButton.transform.SetParent(SavePanel.transform, false);
 		newSaveButton.name = "Save";
@@ -101,7 +114,11 @@ public class Tool_Config : ToolObject_UI {
 		button.onClick.AddListener(() => SaveData());
 	}
 
-	public void LoadConfig()
+    /// <summary>
+    /// Search and load the JSON file that gives the path of every saved layouts,
+    /// Then create a button that corresponds to each.
+    /// </summary>
+    public void LoadConfig()
 	{
 		string[] filePaths = Directory.GetFiles(Application.dataPath + "/StreamingAssets/SavedLayout/", "*.json");
 		foreach (string filePath in filePaths)
@@ -117,8 +134,10 @@ public class Tool_Config : ToolObject_UI {
         }
 	}
 
-
-	public string GetDate()
+    /// <summary>
+    /// Get the current date
+    /// </summary>
+    public string GetDate()
 	{
 		DateTime localDate = DateTime.Now;
 		string format = "yyyy MM dd - HH mm ss";
@@ -126,7 +145,6 @@ public class Tool_Config : ToolObject_UI {
 		String myDate = localDate.ToString(format);
         saveDate = myDate;
 		return saveDate;
-		
 	}
 
 
@@ -160,9 +178,11 @@ public class Tool_Config : ToolObject_UI {
         myCamera.enabled = false;
     }
 
+    /// <summary>
+    /// Given a path and a button, apply the image to the RawImage component inside the button
+    /// </summary>
     private IEnumerator LoadImage(string path, GameObject button)
     {
-
         string name = Path.GetFileNameWithoutExtension(path);
         WWW localFile = new WWW(Application.dataPath + "/StreamingAssets/Screenshots/" + name + ".png"); 
 
@@ -171,8 +191,12 @@ public class Tool_Config : ToolObject_UI {
         button.GetComponentInChildren<RawImage>().texture = myTexture;
     }
 
+    /// <summary>
+    /// Clear the LoadPanel and populate it again
+    /// </summary>
     private IEnumerator Refresh()
     {
+        // Wait for the end of the Fixed Update to make sure the screenshot is taken
         yield return new WaitForFixedUpdate();
 
         foreach(Transform t in LoadPanel.transform)
