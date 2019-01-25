@@ -15,7 +15,6 @@ public class Radar : NetworkBehaviour
     public Transform UserMe;
     public Material orange;
     public Material green;
-    public int previousNum;
     public GameObject ArrowExist;
     public GameObject BorderExist;
     private int frames;
@@ -23,11 +22,11 @@ public class Radar : NetworkBehaviour
     // Use this for initialization
     void Start()
     {
-        frames = 0;
-        previousNum = 0;
+        
         if (GetComponent<NetworkIdentity>().isLocalPlayer)
         {
             gameObject.tag = "UserMe";
+            frames = 0;
         }
         else
         {
@@ -59,14 +58,13 @@ public class Radar : NetworkBehaviour
     {
         if (GetComponent<NetworkIdentity>().isLocalPlayer)
         {
-            // ClearAllArraysForMe();
-            previousNum = GameObject.FindGameObjectsWithTag("UserOther").Length;
+            ClearAllArraysForMe();
             foreach (GameObject fooObj in GameObject.FindGameObjectsWithTag("UserOther"))
             {
                 fooObj.name = "UserOther";
                 if (gameObject.tag == "UserOther")
                 {
-                    BorderExist.SetActive(true);
+                    //BorderExist.SetActive(true);
                     // ArrowExist.SetActive(true);
                 }
                 else
@@ -74,7 +72,6 @@ public class Radar : NetworkBehaviour
                     Destroy(BorderExist);
                     Destroy(ArrowExist);
                 }
-                ClearAllArraysForMe();
                 GameObject a = Instantiate(radarPrefab, fooObj.GetComponent<Radar>().ArrowExist.transform.position, fooObj.GetComponent<Radar>().ArrowExist.transform.rotation);
                 a.SetActive(true);
                 if (Vector3.Distance(fooObj.transform.position, transform.position) > switchDistance)

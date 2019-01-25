@@ -19,34 +19,25 @@ public class ArLoadScript : MonoBehaviour
     {
         string path;
         string jsonFile;
-        //path = Application.dataPath + "/ADDOL/StreamingAssets" + "/Machines.json";
+        //path = Application.dataPath + "/StreamingAssets" + "/Machines.json";
+        path = Path.Combine(Application.persistentDataPath, "Machines.json");
 
+        /*   if (Application.platform == RuntimePlatform.Android)
+           {
+               WWW reader = new WWW(path);
+               while (!reader.isDone) { }
 
-
-        path = Application.streamingAssetsPath + "/Machines.json";
-
-
-        if (Application.platform == RuntimePlatform.Android)
-        {
-            WWW reader = new WWW(path);
-            while (!reader.isDone) { }
-
-            jsonFile = reader.text;
-        }
-        else
-        {
-            jsonFile = File.ReadAllText(path);
-        }
+               jsonFile = reader.text;
+           }
+           else
+           {*/
+        jsonFile = File.ReadAllText(path);
+        //  }
 
 
         Debug.Log(path);
 
-        /* if (File.Exists(path))
-         {
-             jsonFile = File.ReadAllText(path);
-             if (jsonFile != null)
-             {*/
-        //int u = 0;
+
         rootObject = JsonUtility.FromJson<RootObject>(jsonFile);
 
         for (int i = 0; i < GameObjectList.Length; i++)
@@ -62,19 +53,6 @@ public class ArLoadScript : MonoBehaviour
                 }
             }
         }
-
-        //myCity = importerModel.City + "," + importerModel.Country;
-        // importerModel = JsonUtility.FromJson<ImporterModel>(jsonFile);
-
-        /* }
-     }
-     else
-     {
-         Debug.Log("File does not exist.");
-         jsonFile = null;
-         Debug.Log("Reverting to Hardcoded Machines Location");
-
-     }*/
     }
 
 }
